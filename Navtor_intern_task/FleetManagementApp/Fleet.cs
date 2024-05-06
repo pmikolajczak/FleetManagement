@@ -1,9 +1,14 @@
-namespace Navtor_intern_task;
+namespace FleetManagementApp;
 
-public class Fleet(string shipownerName)
+public class Fleet
 {
     private HashSet<Ship> Ships = [];
-    private string _shipownerName = shipownerName;
+    private string ShipOwner { get; set; }
+
+    public Fleet(string shipOwner)
+    {
+        ShipOwner = shipOwner;
+    }
     
     public void AddShip(Ship ship)
     {
@@ -26,6 +31,6 @@ public class Fleet(string shipownerName)
     public override string ToString()
     {
         var ships = string.Join("\n", Ships);
-        return $"------{_shipownerName}'s fleet------\n{ships}\n--------------------------";
+        return $"------{ShipOwner}'s fleet------\n{ships}\n--------------------------";
     }
 }
