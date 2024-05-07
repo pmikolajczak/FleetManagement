@@ -5,29 +5,31 @@ namespace FleetManagementAppTest;
 public class ShipTest
 {
     [Fact]
-    public void Test_ID_Validation_Valid()
+    public void Constructor_InvalidId_ThrowsArgumentException()
     {
         // Arrange
-        var ship = new ContainerShip();
+        string invalidId = "IMO8593506";
 
-        // Act
-        int result = ship.SetId("IMO9593505");
-
-        // Assert
-        Assert.Equal(0, result);
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => 
+            new ContainerShip(
+                invalidId, "Test", 10, 20, 
+                new Position(new Tuple<double, double>(58.253531, 9.892320)), 1000));
     }
     
     [Fact]
-    public void Test_ID_Validation_Invalid()
+    public void Constructor_ValidId_SetsId()
     {
         // Arrange
-        var ship = new ContainerShip();
+        string validId = "IMO9356646";
 
         // Act
-        int result = ship.SetId("IMO8593506");
+        var ship = new ContainerShip(
+            validId, "Test", 10, 20, 
+            new Position(new Tuple<double, double>(58.253531, 9.892320)), 1000);
 
         // Assert
-        Assert.Equal(-1, result);
+        Assert.Equal(validId, ship.Id);
     }
     
 }

@@ -2,7 +2,7 @@ namespace FleetManagementApp;
 
 public class Fleet
 {
-    private HashSet<Ship> Ships = [];
+    public HashSet<Ship> Ships = [];
     private string ShipOwner { get; set; }
 
     public Fleet(string shipOwner)
@@ -32,5 +32,14 @@ public class Fleet
     {
         var ships = string.Join("\n", Ships);
         return $"------{ShipOwner}'s fleet------\n{ships}\n--------------------------";
+    }
+
+    public Ship GetShipByID(string shipId)
+    {
+        if(Ships.Any(ship => ship.Id == shipId))
+        {
+            return Ships.First(ship => ship.Id == shipId);
+        }
+        throw new InvalidOperationException("The ship with the given ID does not exist");
     }
 }

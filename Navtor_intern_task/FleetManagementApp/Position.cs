@@ -1,8 +1,8 @@
 namespace FleetManagementApp;
 
-public record Position(Tuple<double, double> ActualCoordinate, DateTime UpdateTime)
+public record Position(Tuple<double, double> Coordinates, DateTime UpdateTime)
 {
-    public Position(Tuple<double, double> actualCoordinate) : this(actualCoordinate, DateTime.Now)
+    public Position(Tuple<double, double> coordinates) : this(coordinates, DateTime.Now)
     {
     }
 }

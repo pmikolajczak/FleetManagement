@@ -4,23 +4,30 @@ namespace FleetManagementApp;
 
 public abstract partial class Ship
 {
-    public string? Id { get; private set; }
-    public string? Name { get;}
-    public int Width { get;}
-    public int Length { get;}
-    public Tuple<double, double>? ActualCoordinate { get; set; }
+    public string Id { get; private set; }
+    public string Name { get;}
+    public int Width { get;} // in meters
+    public int Length { get;} // in meters
 
-    protected Ship(string? id, string? name, int width, int length, Tuple<double, double>? actualCoordinate)
+    public LinkedList<Position> Positions = [];
+    
+    
+
+    protected Ship(string id, string name, int width, int length, Position currentPosition)
     {
-        Id = id;
-        Name = name;
+        if(SetId(id) == -1)
+        { 
+            throw new ArgumentException("The provided ID is not valid. Please provide a valid ID.");
+        }
         Width = width;
+        Name = name;
         Length = length;
-        ActualCoordinate = actualCoordinate;
+        Positions.AddLast(currentPosition);
     }
 
-    protected Ship()
+    protected Ship(string id)
     {
+        Id = id;
     }
 
     public override bool Equals(object? obj)
@@ -32,22 +39,28 @@ public abstract partial class Ship
         return Id == other.Id;
     }
 
+    public Position GetCurrentPosition()
+    {
+        return Positions.Last!.Value;
+    }
+
+    public void UpdatePosition(Position newPosition)
+    {
+        Positions.AddLast(newPosition);
+    }
+
 
     public override int GetHashCode()
     {
         return Id.GetHashCode();
     }
     
-    public override string ToString()
-    {
-        return $"Id: {Id}, Name: {Name}, Width: {Width}, Length: {Length}, ActualCoordinate: {ActualCoordinate}";
-    }
 
-    public int SetId(string? id)
+    private int SetId(string id)
     {
         if (RegexForIdWithImo().IsMatch(id))
         {
-            string? digits = id.Remove(0, 3);
+            string digits = id.Remove(0, 3);
             if (!CheckImoSum(digits)) return -1;
             Id = id;
             return 0;
@@ -63,11 +76,11 @@ public abstract partial class Ship
         return -1;
     }
 
-    private static bool CheckImoSum(string? digits)
+    private static bool CheckImoSum(string digits)
     {
         int sum = 0;
         int multiplier = 7;
-        for(int i = 0; i < digits.Length - 2; i++)
+        for(int i = 0; i < digits.Length - 1; i++)
         {
             sum += multiplier * int.Parse(digits[i].ToString()) ;
             multiplier--;
