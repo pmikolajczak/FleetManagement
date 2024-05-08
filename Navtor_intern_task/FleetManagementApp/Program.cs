@@ -20,7 +20,7 @@ internal static class Program {
                     AddShipToFleet(fleet);
                     break;
                 case 2:
-                    Console.WriteLine("2");
+                    RemoveShip(fleet);
                     break;
                 case 3:
                     Console.WriteLine(fleet);
@@ -41,6 +41,21 @@ internal static class Program {
                     break;
             }
         } while (isAppRunning);
+    }
+
+    private static void RemoveShip(Fleet fleet)
+    {
+        Console.Write("Enter ship ID: ");
+        var shipId = Console.ReadLine();
+        try
+        {
+            var ship = fleet.GetShipByID(shipId);
+            fleet.RemoveShip(ship);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
     private static void InitializeFleetWithData(Fleet fleet)
