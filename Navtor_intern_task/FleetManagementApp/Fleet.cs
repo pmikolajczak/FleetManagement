@@ -1,8 +1,10 @@
+using FleetManagementApp.Exceptions;
+
 namespace FleetManagementApp;
 
 public class Fleet
 {
-    public HashSet<Ship> Ships = [];
+    public readonly HashSet<Ship> Ships = [];
     private string ShipOwner { get; set; }
 
     public Fleet(string shipOwner)
@@ -15,8 +17,9 @@ public class Fleet
         Ships.Add(ship);
     }
     
-    public void RemoveShip(Ship ship)
+    public void RemoveShip(string id)
     {
+        var ship = CheckIfShipExist(id);
         Ships.Remove(ship);
     }
     
@@ -34,12 +37,9 @@ public class Fleet
         return $"------{ShipOwner}'s fleet------\n{ships}\n--------------------------";
     }
 
-    public Ship GetShipByID(string shipId)
+    public Ship CheckIfShipExist(string shipId)
     {
-        if(Ships.Any(ship => ship.Id == shipId))
-        {
-            return Ships.First(ship => ship.Id == shipId);
-        }
-        throw new InvalidOperationException("The ship with the given ID does not exist");
+        return Ships.FirstOrDefault(ship => ship.Id == shipId, null) ?? 
+               throw new InvalidShipIdException("Ship not found");
     }
 }

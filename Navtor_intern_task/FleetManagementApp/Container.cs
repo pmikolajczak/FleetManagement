@@ -1,23 +1,38 @@
+using FleetManagementApp.Exceptions;
+
 namespace FleetManagementApp;
 
 public class Container
 {
-    
-    private string Sender { get; }
-    private string Addressee { get; }
-    private string CargoDescription { get; }
-    public double Weight { get; } // in Tons
+    public string Sender { get; }
+    public string Addressee { get; }
+    public string CargoDescription { get; }
+    public double MassKg { get; }
     public Guid Id { get; }
 
-    public Container(string sender, string addressee, string cargoDescription, double weight)
+    public Container(string sender, string addressee, string cargoDescription, double massKg)
     {
+        ValidateMassKg(massKg);
+        ValidateSenderAddresseeCargoDescription(sender, addressee, cargoDescription);
+        
         Sender = sender;
         Addressee = addressee;
         CargoDescription = cargoDescription;
-        Weight = weight;
+        MassKg = massKg;
         Id = Guid.NewGuid();
     }
-        
+    
+    public static void ValidateSenderAddresseeCargoDescription(string sender, string addressee, string cargoDescription)
+    {
+        ArgumentNullException.ThrowIfNull(sender);
+        ArgumentNullException.ThrowIfNull(addressee);
+        ArgumentNullException.ThrowIfNull(cargoDescription);
+        if (sender.Length < 2 || addressee.Length < 2 || cargoDescription.Length < 2)
+        {
+            throw new InvalidContainerDataException(
+                "The provided data is not valid. Please provide valid data.");
+        }
+    }
     
     public override string ToString()
     {
@@ -25,6 +40,15 @@ public class Container
                $"Sender: {Sender}, " +
                $"Addressee: {Addressee}, " +
                $"CargoDescription: {CargoDescription}, " +
-               $"Weight: {Weight}";
+               $"Weight: {MassKg}";
+    }
+
+    public static void ValidateMassKg(double massKg)
+    {
+        if (massKg <= 0)
+        {
+            throw new InvalidContainerMassException(
+                "The mass of the container must be greater than 0");
+        }
     }
 }
